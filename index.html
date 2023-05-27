@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Discord Timestamp with offset</title>
+  <script>
+    function convertAndCopyToClipboard() {
+      var hoursInput = document.getElementById("hoursInput").value;
+      var minutesInput = document.getElementById("minutesInput").value;
+
+      var hours = parseFloat(hoursInput);
+      var minutes = parseFloat(minutesInput);
+
+      if (isNaN(hours) || isNaN(minutes)) {
+        document.getElementById("convertedTime").textContent = "Invalid offset.";
+        return;
+      }
+
+      var offsetMilliseconds = (hours * 60 + minutes) * 60 * 1000;
+      var currentUnixTimestamp = Math.floor(Date.now() / 1000);
+      var convertedTimestamp = new Date(currentUnixTimestamp * 1000 + offsetMilliseconds);
+
+      var convertedUnixTime = Math.floor(convertedTimestamp / 1000);
+      var discordTimestamp = "<t:" + convertedUnixTime + ":R>";
+      document.getElementById("convertedTime").textContent = discordTimestamp;
+
+      navigator.clipboard.writeText(discordTimestamp).then(function() {
+        document.getElementById("copyStatus").textContent = "Copied to clipboard!";
+      }, function() {
+        document.getElementById("copyStatus").textContent = "Failed to copy to clipboard.";
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Discord Timestamp with offset</h1>
+  <p><i>Use tab to move between inputs and to the button, then hit enter to convert/copy.</i></p>
+  <label for="hoursInput">Offset Hours:</label>
+  <input type="number" id="hoursInput" value="0">
+  <br>
+  <label for="minutesInput">Offset Minutes:</label>
+  <input type="number" id="minutesInput" value="0">
+  <br>
+  <button onclick="convertAndCopyToClipboard()">Convert & Copy</button>
+  <p>Converted Time (Discord timestamp): <span id="convertedTime"></span></p>
+  <p><b id="copyStatus"></b></p>
+</body>
+</html>
